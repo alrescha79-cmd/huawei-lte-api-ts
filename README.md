@@ -18,7 +18,7 @@ Modern TypeScript library for Huawei LTE modems. Control your modem, send SMS, g
 ## Installation
 
 ```bash
-npm install huawei-lte-api
+npm install git+https://github.com/alrescha79-cmd/huawei-lte-api-ts.git#feat/modernize-to-v2.0.0
 ```
 
 ## Quick Start
