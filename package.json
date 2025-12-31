@@ -5,8 +5,15 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
+  "react-native": {
+    "./dist/esm/core/crypto.js": "./dist/esm/core/crypto.native.js",
+    "./dist/cjs/core/crypto.js": "./dist/cjs/core/crypto.native.js",
+    "./dist/esm/core/xml-parser.js": "./dist/esm/core/xml-parser.native.js",
+    "./dist/cjs/core/xml-parser.js": "./dist/cjs/core/xml-parser.native.js"
+  },
   "exports": {
     ".": {
+      "react-native": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js",
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
@@ -47,7 +54,9 @@
     "mobile",
     "broadband",
     "typescript",
-    "nodejs"
+    "nodejs",
+    "react-native",
+    "expo"
   ],
   "files": [
     "dist",
@@ -71,5 +80,19 @@
   },
   "dependencies": {
     "xml2js": "^0.6.2"
+  },
+  "peerDependencies": {
+    "react-native-quick-crypto": ">=0.7.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-quick-crypto": {
+      "optional": true
+    },
+    "fast-xml-parser": {
+      "optional": true
+    }
+  },
+  "optionalDependencies": {
+    "fast-xml-parser": "^5.3.3"
   }
 }

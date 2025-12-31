@@ -17,7 +17,49 @@ Complete example of integrating Huawei LTE API with React Native Expo, including
 # Install required packages
 npm install @alrescha79/huawei-lte-api
 npm install @react-native-async-storage/async-storage
+
+# IMPORTANT: Install crypto polyfill for React Native
+npm install react-native-quick-crypto
+npx expo install react-native-quick-crypto
+
+# Install required native dependencies
+npx pod-install  # For iOS (if not using Expo Go)
 ```
+
+### Setup Polyfills
+
+Create or update your `index.js` or `App.tsx` root file:
+
+```typescript
+// index.js or App.tsx (at the very top, before any other imports)
+import 'react-native-quick-crypto';
+
+// Your other imports
+import { HuaweiAuthProvider } from './contexts/HuaweiAuthProvider';
+// ... rest of your app
+```
+
+### Expo Configuration
+
+Add to your `app.json`:
+
+```json
+{
+  "expo": {
+    "plugins": [
+      [
+        "react-native-quick-crypto",
+        {
+          "android": {
+            "extraPackages": ["com.margelo.quickcrypto"]
+          }
+        }
+      ]
+    ]
+  }
+}
+```
+
 
 ## File Structure
 
