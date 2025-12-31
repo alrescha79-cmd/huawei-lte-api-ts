@@ -230,10 +230,20 @@ try {
 
 See the [examples](./examples) directory for complete working examples:
 
+### TypeScript Examples
 - `basic-usage.ts` - Basic device info and monitoring
 - `sms-management.ts` - Send and receive SMS
 - `mobile-connection.ts` - Control mobile data connection
-- `device_info.js` - Simple CommonJS example
+
+### JavaScript Examples
+- `device_info.js` - Get device information
+- `connected-devices.js` - List WiFi connected devices
+- `data-usage.js` - Monitor data usage and traffic statistics
+- `network-status.js` - Network status and signal strength
+- `wifi-settings.js` - Complete WiFi management (SSID, password, channel, etc.)
+- `wifi-control.js` - WiFi status and basic controls
+- `mobile-data-control.js` - Mobile data connection control
+- `sms-operations.js` - SMS operations (list, send, delete)
 
 ## TypeScript Support
 

@@ -1,5 +1,5 @@
 {
-  "name": "huawei-lte-api",
+  "name": "@alrescha79/huawei-lte-api",
   "version": "2.0.0",
   "description": "Modern TypeScript API for Huawei LAN/WAN LTE Modems with full feature parity to Python library",
   "main": "dist/index.js",

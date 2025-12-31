@@ -1,2 +1,6 @@
 node_modules
 dist
+dist.browser
+
+# Ignore example files - they are standalone working examples
+examples/
