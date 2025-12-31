@@ -10,7 +10,8 @@
  *   node sms-operations.js http://admin:password@192.168.8.1/ delete <index>
  */
 
-const { createClient } = require('../dist/cjs/index.js');
+import { createClient } from '../dist/cjs/index.js';
+import { ResponseErrorNotSupportedException } from '../dist/cjs/exceptions.js';
 
 async function showCount(client) {
   const count = await client.sms.smsCount();
@@ -125,6 +126,12 @@ async function main() {
     console.log('\n✅ Done!');
 
   } catch (error) {
+    if (error instanceof ResponseErrorNotSupportedException) {
+      console.error('⚠️  SMS is not supported on this modem');
+      console.error('   This is normal for some router models (e.g., B310, B315)');
+      console.error('   Only mobile hotspot models typically support SMS');
+      process.exit(2);
+    }
     console.error('❌ Error:', error.message);
     process.exit(1);
   }

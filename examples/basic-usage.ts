@@ -10,14 +10,14 @@
  * - Logout
  */
 
-import { HuaweiLTEClient } from '../src/client';
+import { createClient } from '../dist/cjs/index.js';
 
 async function main() {
   // Create client
-  const client = new HuaweiLTEClient({
+  const client = await createClient({
     url: process.env.HUAWEI_URL || 'http://192.168.8.1',
     username: process.env.HUAWEI_USERNAME || 'admin',
-    password: process.env.HUAWEI_PASSWORD || '1sampek8',
+    password: process.env.HUAWEI_PASSWORD || 'admin',
   });
 
   console.log('🔌 Connecting to Huawei LTE modem...\n');

@@ -85,27 +85,35 @@ const signal = await client.device.signal();
 
 ### SMS Management
 
+> **Note:** SMS functionality is only available on mobile hotspot models (e.g., E5577, E5186, B528). Router models (e.g., B310, B315, B525) typically do not support SMS.
+
 ```typescript
-import { BoxType } from 'huawei-lte-api';
+import { BoxType, ResponseErrorNotSupportedException } from 'huawei-lte-api';
 
-// Get SMS count
-const count = await client.sms.smsCount();
+try {
+  // Get SMS count
+  const count = await client.sms.smsCount();
 
-// List SMS messages
-const messages = await client.sms.smsList({
-  page: 1,
-  boxType: BoxType.LOCAL_INBOX,
-  readCount: 20,
-});
+  // List SMS messages
+  const messages = await client.sms.smsList({
+    page: 1,
+    boxType: BoxType.LOCAL_INBOX,
+    readCount: 20,
+  });
 
-// Send SMS
-await client.sms.sendSms({
-  phoneNumbers: ['+1234567890'],
-  message: 'Hello from TypeScript!',
-});
+  // Send SMS
+  await client.sms.sendSms({
+    phoneNumbers: ['+1234567890'],
+    message: 'Hello from TypeScript!',
+  });
 
-// Delete SMS
-await client.sms.deleteSms(messageId);
+  // Delete SMS
+  await client.sms.deleteSms(messageId);
+} catch (error) {
+  if (error instanceof ResponseErrorNotSupportedException) {
+    console.log('SMS not supported on this modem');
+  }
+}
 ```
 
 ### Network Monitoring
@@ -184,6 +192,8 @@ await client.user.changePassword({
 - Huawei 5G CPE Pro 2 (H122-373)
 
 And many more Huawei LTE devices!
+
+> **ℹ️ SMS Support:** Only mobile hotspot models (E5xxx, E5xxx) typically support SMS functionality. Router models (B3xx, B5xx) generally do NOT support SMS operations.
 
 ## Authentication
 
