@@ -2,14 +2,14 @@
   "name": "@alrescha79/huawei-lte-api",
   "version": "2.0.0",
   "description": "Modern TypeScript API for Huawei LAN/WAN LTE Modems with full feature parity to Python library",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     }
   },
   "engines": {
