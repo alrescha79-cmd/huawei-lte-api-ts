@@ -1,17 +1,44 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2020",
     "module": "commonjs",
+    "lib": ["ES2020", "DOM"],
     "declaration": true,
-    "noImplicitAny": true,
-    "outDir": "./dist",
-    "strict": true,
+    "declarationMap": true,
     "sourceMap": true,
-    "lib": [
-      "es7",
-      "dom"
-    ]
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "removeComments": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "src/Connection.ts",
+    "src/Session.ts",
+    "src/api/User.ts",
+    "src/api/FileManager.ts",
+    "examples/**/*",
+    "__tests__/**/*"
+  ]
 }

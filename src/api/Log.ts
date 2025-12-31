@@ -1,9 +1,9 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class Log extends ApiGroup {
     loginfo(): Promise<GetResponseType> {
-        return this._connection.get('log/loginfo');
+        return this.get('log/loginfo');
     }
 }

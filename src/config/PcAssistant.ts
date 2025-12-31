@@ -1,14 +1,14 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class PcAssistant extends ApiGroup {
     config(): Promise<GetResponseType> {
-        return this._connection.get('pcassistant/config.xml', {}, 'config');
+        return this.get('pcassistant/config.xml', {}, 'config');
     }
 
     updateautorun(): Promise<GetResponseType> {
-        return this._connection.get('pcassistant/updateautorun.xml', {}, 'config');
+        return this.get('pcassistant/updateautorun.xml', {}, 'config');
     }
 }
 

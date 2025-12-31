@@ -1,9 +1,9 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class Time extends ApiGroup {
     timeout(): Promise<GetResponseType> {
-        return this._connection.get('time/timeout');
+        return this.get('time/timeout');
     }
 }

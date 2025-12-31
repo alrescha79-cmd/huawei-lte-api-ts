@@ -1,22 +1,22 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class SNtp extends ApiGroup{
     getSettings(): Promise<GetResponseType> {
-        return this._connection.get('sntp/settings');
+        return this.get('sntp/settings');
     }
 
     sntpswitch(): Promise<GetResponseType> {
-        return this._connection.get('sntp/sntpswitch');
+        return this.get('sntp/sntpswitch');
     }
 
     serverinfo(): Promise<GetResponseType> {
-        return this._connection.get('sntp/serverinfo');
+        return this.get('sntp/serverinfo');
     }
 
     timeinfo(): Promise<GetResponseType> {
-        return this._connection.get('sntp/timeinfo');
+        return this.get('sntp/timeinfo');
     }
 }
     

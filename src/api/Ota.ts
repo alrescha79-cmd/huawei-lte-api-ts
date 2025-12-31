@@ -1,9 +1,9 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class Ota extends ApiGroup {
     status(): Promise<GetResponseType> {
-        return this._connection.get('ota/status');
+        return this.get('ota/status');
     }
 }

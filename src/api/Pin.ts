@@ -1,18 +1,18 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType, SetResponseType } from '../types';
 
 
 export class Pin extends ApiGroup {
     status(): Promise<GetResponseType> {
-        return this._connection.get('pin/status');
+        return this.get('pin/status');
     }
 
     simlock(): Promise<GetResponseType> {
-        return this._connection.get('pin/simlock');
+        return this.get('pin/simlock');
     }
 
     savePin(): Promise<GetResponseType> {
-        return this._connection.get('pin/save-pin');
+        return this.get('pin/save-pin');
     }
 
     /**
@@ -28,7 +28,7 @@ export class Pin extends ApiGroup {
      * @param pukCode PUK code to use in case it is required by the device (default is `null`).
      */
     operate(operate_type: number = 0, currentPin?: number, newPin?: number, pukCode?: number) : Promise<SetResponseType> {
-        return this._connection.postSet('pin/operate', {
+        return this.postSet('pin/operate', {
             'OperateType': operate_type,
             'CurrentPin': currentPin,
             'NewPin': newPin,

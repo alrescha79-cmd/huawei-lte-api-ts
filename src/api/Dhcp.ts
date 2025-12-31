@@ -1,27 +1,27 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class Dhcp extends ApiGroup {
     settings(): Promise<GetResponseType> {
-        return this._connection.get('dhcp/settings');
+        return this.get('dhcp/settings');
     }
 
     featureSwitch(): Promise<GetResponseType> {
-        return this._connection.get('dhcp/feature-switch');
+        return this.get('dhcp/feature-switch');
     }
 
     /**
      * Endpoint found by reverse engineering B310s-22 firmware, unknown usage
      */
     dhcpHostInfo(): Promise<GetResponseType> {
-        return this._connection.get('dhcp/dhcp-host-info');
+        return this.get('dhcp/dhcp-host-info');
     }
 
     /**
      * Endpoint found by reverse engineering B310s-22 firmware, unknown usage
      */
     staticAddrInfo(): Promise<GetResponseType> {
-        return this._connection.get('dhcp/static-addr-info');
+        return this.get('dhcp/static-addr-info');
     }
 }

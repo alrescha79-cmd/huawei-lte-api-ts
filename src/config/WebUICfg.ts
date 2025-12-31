@@ -1,10 +1,10 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class WebUICfg extends ApiGroup {
     config(): Promise<GetResponseType> {
-        return this._connection.get('webuicfg/config.xml', {}, 'config');
+        return this.get('webuicfg/config.xml', {}, 'config');
     }
 }
 

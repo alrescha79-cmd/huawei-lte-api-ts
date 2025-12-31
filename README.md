@@ -1,106 +1,273 @@
 # huawei-lte-api-ts
-API For huawei LAN/WAN LTE Modems rewritten from [original Python library](https://github.com/Salamek/huawei-lte-api) into TypeScript
-you can use this to simply send SMS, get information about your internet usage, signal, and tons of other stuff
 
-## Tested on:
-#### 3G/LTE Routers:
-* Huawei B310s-22
-* Huawei B315s-22
-* Huawei B525s-23a
-* Huawei B525s-65a
-* Huawei B715s-23c
-* Huawei B528s
-* Huawei B535-232
-* Huawei B628-265
-* Huawei B818-263
-* Huawei E5186s-22a
-* Huawei E5576-320
-* Huawei E5577Cs-321
- 
-#### 3G/LTE USB sticks:
-(Device must support NETWork mode aka. "HiLink" version, it wont work with serial mode)
-* Huawei E3131
-* Huawei E3372
-* Huawei E3531
+Modern TypeScript library for Huawei LTE modems. Control your modem, send SMS, get network info, manage WiFi, and more.
 
+[![npm version](https://badge.fury.io/js/huawei-lte-api.svg)](https://www.npmjs.com/package/huawei-lte-api)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
 
-#### 5G Routers:
-* Huawei 5G CPE Pro 2 (H122-373)
+## Features
 
-(probably will work for other Huawei LTE devices too)
-
-### Will NOT work on:
-#### LTE Routers:
-* Huawei B2368-22 (Incompatible firmware, testing device needed!)
-* Huawei B593s-22 (Incompatible firmware, testing device needed!)
+✅ **Full TypeScript support** with strict type checking  
+✅ **Modern async/await API** - no callbacks  
+✅ **Dual package support** - ESM and CommonJS  
+✅ **Comprehensive API coverage** - Device, SMS, Monitoring, WiFi, and more  
+✅ **SHA256 authentication** - Secure login for modern firmware  
+✅ **Zero dependencies** - Pure TypeScript implementation  
 
 ## Installation
 
-### npm
 ```bash
-$ npm i huawei-lte-api --save
+npm install huawei-lte-api
 ```
 
-## Usage
+## Quick Start
 
 ```typescript
-import { Connection, Device } from 'huawei-lte-api';
+import { createClient } from 'huawei-lte-api';
 
-const connection = new Connection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/');
-
-connection.ready.then(() => {
-    const device = new Device(connection);
-
-    //Can be accessed without authorization
-    device.signal().then((result) => {
-        console.log(result);
-    }).catch((error) => {
-        console.log(error);
-    });
-
-    //Needs valid authorization, will throw exception if invalid credentials are passed in URL
-    device.information().then((result) => {
-        console.log(result);
-    }).catch((error) => {
-        console.log(error);
-    });
+// Create client (automatically handles login)
+const client = await createClient({
+  url: 'http://admin:password@192.168.8.1/',
 });
-# For more API calls just look on code in the src/api folder, there is no separate DOC yet
 
+// Get device information
+const device = await client.device.information();
+console.log('Device:', device.DeviceName);
+console.log('IMEI:', device.Imei);
+
+// Check signal strength
+const signal = await client.monitoring.status();
+console.log('Signal:', signal.SignalIcon, 'bars');
+
+// Get network info
+const traffic = await client.monitoring.trafficStatistics();
+console.log('Downloaded:', traffic.CurrentDownload, 'bytes');
+
+// Logout when done
+await client.logout();
 ```
-Result object
-```javascript
-{'DeviceName': 'B310s-22', 'SerialNumber': 'MY_SERIAL_NUMBER', 'Imei': 'MY_IMEI', 'Imsi': 'MY_IMSI', 'Iccid': 'MY_ICCID', 'Msisdn': None, 'HardwareVersion': 'WL1B310FM03', 'SoftwareVersion': '21.311.06.03.55', 'WebUIVersion': '17.100.09.00.03', 'MacAddress1': 'EHM:MY:MAC', 'MacAddress2': None, 'ProductFamily': 'LTE', 'Classify': 'cpe', 'supportmode': None, 'workmode': 'LTE'}
+
+### Without Auto-Login
+
+```typescript
+import { HuaweiLTEClient } from 'huawei-lte-api';
+
+const client = new HuaweiLTEClient({
+  url: 'http://192.168.8.1',
+  username: 'admin',
+  password: 'yourpassword',
+  autoLogin: false, // Don't login automatically
+});
+
+// Login manually when needed
+await client.login();
+
+// Use the client
+const deviceInfo = await client.device.information();
+
+// Logout
+await client.logout();
 ```
 
-```javascript
-const huaweiLteApi = require('huawei-lte-api');
+## API Modules
 
-const connection = new huaweiLteApi.Connection('http://admin:password@192.168.8.1/');
+### Device Information
 
-connection.ready.then(function() {
-    console.log('Ready');
+```typescript
+// Get device details
+const info = await client.device.information();
+// Returns: DeviceName, SerialNumber, Imei, SoftwareVersion, etc.
 
+// Get signal strength
+const signal = await client.device.signal();
+```
 
-    const device = new huaweiLteApi.Device(connection);
-    device.signal().then(function(result) {
-        console.log(result);
-    }).catch(function(error) {
-        console.log(error);
-    });
+### SMS Management
 
+```typescript
+import { BoxType } from 'huawei-lte-api';
 
-    device.information().then(function(result) {
-        console.log(result);
-    }).catch(function(error) {
-        console.log(error);
-    });
+// Get SMS count
+const count = await client.sms.smsCount();
 
-    const dialUp = new huaweiLteApi.DialUp(connection);
-    dialUp.setMobileDataswitch(1).then(function(result) {
-        console.log(result);
-    }).catch(function(error) {
-        console.log(error);
-    });
+// List SMS messages
+const messages = await client.sms.smsList({
+  page: 1,
+  boxType: BoxType.LOCAL_INBOX,
+  readCount: 20,
+});
+
+// Send SMS
+await client.sms.sendSms({
+  phoneNumbers: ['+1234567890'],
+  message: 'Hello from TypeScript!',
+});
+
+// Delete SMS
+await client.sms.deleteSms(messageId);
+```
+
+### Network Monitoring
+
+```typescript
+// Get network status
+const status = await client.monitoring.status();
+console.log('Connected:', status.ConnectionStatus);
+console.log('Network Type:', status.CurrentNetworkType);
+
+// Get traffic statistics
+const traffic = await client.monitoring.trafficStatistics();
+console.log('Download:', traffic.CurrentDownload);
+console.log('Upload:', traffic.CurrentUpload);
+
+// Check notification
+const notification = await client.monitoring.checkNotifications();
+```
+
+### Mobile Data Control
+
+```typescript
+// Connect to mobile network
+await client.dialup.setMobileDataswitch(1);
+
+// Disconnect
+await client.dialup.setMobileDataswitch(0);
+
+// Get connection status
+const status = await client.dialup.mobileDataswitch();
+```
+
+### WiFi Management
+
+```typescript
+import { AuthMode, WpaEncryptMode } from 'huawei-lte-api';
+
+// Get WiFi settings
+const settings = await client.wlan.basicSettings();
+
+// Change WiFi password
+await client.wlan.setSecuritySettings({
+  wpaPreSharedKey: 'newpassword123',
+  authMode: AuthMode.WPA2_PSK,
+  wpaEncryptionMode: WpaEncryptMode.AES,
+});
+
+// Get connected devices
+const hosts = await client.wlan.hostList();
+console.log('Connected devices:', hosts.Hosts.Host.length);
+```
+
+### User Management
+
+```typescript
+// Check login state
+const state = await client.user.stateLogin();
+
+// Change password
+await client.user.changePassword({
+  currentPassword: 'oldpass',
+  newPassword: 'newpass',
 });
 ```
+
+## Supported Devices
+
+### 3G/LTE Routers
+- Huawei B310s, B315s, B525s, B535, B715s, B818, E5186s, E5576, E5577Cs
+- **Huawei B312** ✅ Tested and confirmed working
+
+### 3G/LTE USB Sticks
+- Huawei E3131, E3372, E3531 (HiLink mode)
+
+### 5G Routers
+- Huawei 5G CPE Pro 2 (H122-373)
+
+And many more Huawei LTE devices!
+
+## Authentication
+
+The library supports multiple authentication methods:
+
+- **BASE64** (password_type=0) - Simple base64 encoding
+- **SHA256** (password_type=4) - Secure hash-based authentication (recommended)
+
+Authentication is handled automatically based on the modem's requirements.
+
+## Error Handling
+
+```typescript
+import { 
+  ResponseErrorLoginRequiredException,
+  ResponseErrorSystemBusyException 
+} from 'huawei-lte-api';
+
+try {
+  const data = await client.device.information();
+} catch (error) {
+  if (error instanceof ResponseErrorLoginRequiredException) {
+    console.error('Need to login first');
+    await client.login();
+  } else if (error instanceof ResponseErrorSystemBusyException) {
+    console.error('System busy, try again later');
+  } else {
+    console.error('Error:', error.message);
+  }
+}
+```
+
+## Examples
+
+See the [examples](./examples) directory for complete working examples:
+
+- `basic-usage.ts` - Basic device info and monitoring
+- `sms-management.ts` - Send and receive SMS
+- `mobile-connection.ts` - Control mobile data connection
+- `device_info.js` - Simple CommonJS example
+
+## TypeScript Support
+
+Full TypeScript definitions included:
+
+```typescript
+import type { 
+  DeviceInformation,
+  MonitoringStatus,
+  SmsMessage,
+  ClientConfig 
+} from 'huawei-lte-api';
+```
+
+## Building from Source
+
+```bash
+# Install dependencies
+npm install
+
+# Build library
+npm run build
+
+# Run tests
+npm test
+
+# Lint code
+npm run lint
+```
+
+## License
+
+Apache 2.0 - See [LICENSE](LICENSE) for details
+
+## Credits
+
+This library is a modern TypeScript rewrite of the original [Python huawei-lte-api](https://github.com/Salamek/huawei-lte-api) by Adam Schubert.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Support
+
+- 📝 [Documentation](./docs)
+- 🐛 [Issue Tracker](https://github.com/alrescha79-cmd/huawei-lte-api-ts/issues)
+- 💬 [Discussions](https://github.com/alrescha79-cmd/huawei-lte-api-ts/discussions)

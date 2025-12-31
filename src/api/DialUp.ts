@@ -1,4 +1,4 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { AuthModeEnum, IpType } from '../enums/dialup';
 import { GetResponseType, SetResponseType } from '../types';
 
@@ -7,27 +7,27 @@ export class DialUp extends ApiGroup {
      * Get current LTE modem toggle state
      */
     mobileDataswitch(): Promise<GetResponseType> {
-        return this._connection.get('dialup/mobile-dataswitch')
+        return this.get('dialup/mobile-dataswitch')
     }
 
     connection(): Promise<GetResponseType> {
-        return this._connection.get('dialup/connection')
+        return this.get('dialup/connection')
     }
 
     dialupFeatureSwitch(): Promise<GetResponseType> {
-        return this._connection.get('dialup/dialup-feature-switch')
+        return this.get('dialup/dialup-feature-switch')
     }
 
     profiles(): Promise<GetResponseType> {
-        return this._connection.get('dialup/profiles')
+        return this.get('dialup/profiles')
     }
 
     autoApn(): Promise<GetResponseType> {
-        return this._connection.get('dialup/auto-apn')
+        return this.get('dialup/auto-apn')
     }
 
     dial(): Promise<SetResponseType> {
-        return this._connection.postSet('dialup/dial', {
+        return this.postSet('dialup/dial', {
             'Action': 1
         });
     }
@@ -37,7 +37,7 @@ export class DialUp extends ApiGroup {
      * @param dataswitch: number 0 to disable LTE modem, 1 to enable LTE modem
      */
     setMobileDataswitch(dataswitch: number = 0): Promise<SetResponseType> {
-        return this._connection.postSet('dialup/mobile-dataswitch', {
+        return this.postSet('dialup/mobile-dataswitch', {
             'dataswitch': dataswitch
         })
     }
@@ -48,7 +48,7 @@ export class DialUp extends ApiGroup {
      * @returns 
      */
     setDefaultProfile(setDefault: number = 0): Promise<SetResponseType> {
-        return this._connection.postSet('dialup/profiles', {
+        return this.postSet('dialup/profiles', {
             'SetDefault': setDefault,
             'Delete': 0,
             'Modify': 0
@@ -61,7 +61,7 @@ export class DialUp extends ApiGroup {
      * @returns 
      */
     deleteProfile(index: number): Promise<SetResponseType> {
-        return this._connection.postSet('dialup/profiles', {
+        return this.postSet('dialup/profiles', {
             'SetDefault': 0,
             'Delete': index,
             'Modify': 0
@@ -90,7 +90,7 @@ export class DialUp extends ApiGroup {
         ipType: IpType = IpType.IPV4_IPV6,
         isDefault: boolean = false
         ): Promise<SetResponseType> {
-        return this._connection.postSet('dialup/profiles', {
+        return this.postSet('dialup/profiles', {
             'SetDefault': isDefault ? 1 : 0,
             'Delete': 0,
             'Modify': 1,

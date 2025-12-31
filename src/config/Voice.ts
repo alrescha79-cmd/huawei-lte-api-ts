@@ -1,14 +1,14 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class Voice extends ApiGroup {
     config(): Promise<GetResponseType> {
-        return this._connection.get('voice/config.xml', {}, 'config');
+        return this.get('voice/config.xml', {}, 'config');
     }
 
     country(): Promise<GetResponseType> {
-        return this._connection.get('voice/country.xml', {}, 'config');
+        return this.get('voice/country.xml', {}, 'config');
     }
 }
 

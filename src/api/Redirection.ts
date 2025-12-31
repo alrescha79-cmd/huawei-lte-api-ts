@@ -1,10 +1,10 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class Redirection extends ApiGroup {
     homepage(): Promise<GetResponseType> {
-        return this._connection.get('redirection/homepage');
+        return this.get('redirection/homepage');
     }
 }
     

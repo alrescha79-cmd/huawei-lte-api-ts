@@ -1,45 +1,45 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class Voice extends ApiGroup {
     featureswitch(): Promise<GetResponseType> {
-        return this._connection.get('voice/featureswitch');
+        return this.get('voice/featureswitch');
     }
 
     sipaccount(): Promise<GetResponseType> {
-        return this._connection.get('voice/sipaccount');
+        return this.get('voice/sipaccount');
     }
 
     sipadvance(): Promise<GetResponseType> {
-        return this._connection.get('voice/sipadvance');
+        return this.get('voice/sipadvance');
     }
 
     sipserver(): Promise<GetResponseType> {
-        return this._connection.get('voice/sipserver');
+        return this.get('voice/sipserver');
     }
 
     speeddial(): Promise<GetResponseType> {
-        return this._connection.get('voice/speeddial');
+        return this.get('voice/speeddial');
     }
 
     functioncode(): Promise<GetResponseType> {
-        return this._connection.get('voice/functioncode');
+        return this.get('voice/functioncode');
     }
 
     voiceadvance(): Promise<GetResponseType> {
-        return this._connection.get('voice/voiceadvance');
+        return this.get('voice/voiceadvance');
     }
 
     voicebusy(): Promise<GetResponseType> {
-        return this._connection.get('voice/voicebusy');
+        return this.get('voice/voicebusy');
     }
 
     /**
     * Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
     */
     codec(): Promise<GetResponseType> {
-        return this._connection.get('voice/codec');
+        return this.get('voice/codec');
     }
 }
     

@@ -1,85 +1,145 @@
-
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { AntennaTypeEnum } from '../enums/device';
-import { GetResponseType, SetResponseType } from '../types';
+import {
+  DeviceInfo,
+  DeviceBasicInfo,
+  DeviceSignal,
+  DeviceRebootResponse,
+} from '../types/device';
+import { GetResponseType, SetResponseType } from '../types/common';
 
+/**
+ * Device API module
+ * Handles device information, control, and configuration
+ */
 export class Device extends ApiGroup {
-    information(): Promise<GetResponseType> {
-        return this._connection.get('device/information')
-    }
+  /**
+   * Get device information
+   */
+  information(): Promise<DeviceInfo> {
+    return this.get<DeviceInfo>('device/information');
+  }
 
-    autorunVersion(): Promise<GetResponseType> {
-        return this._connection.get('device/autorun-version')
-    }
+  /**
+   * Get autorun version
+   */
+  autorunVersion(): Promise<GetResponseType> {
+    return this.get('device/autorun-version');
+  }
 
-    deviceFeatureSwitch(): Promise<GetResponseType> {
-        return this._connection.get('device/device-feature-switch')
-    }
+  /**
+   * Get device feature switch settings
+   */
+  deviceFeatureSwitch(): Promise<GetResponseType> {
+    return this.get('device/device-feature-switch');
+  }
 
-    basicInformation(): Promise<GetResponseType> {
-        return this._connection.get('device/basic_information')
-    }
+  /**
+   * Get basic device information
+   */
+  basicInformation(): Promise<DeviceBasicInfo> {
+    return this.get<DeviceBasicInfo>('device/basic_information');
+  }
 
-    basicinformation(): Promise<GetResponseType> {
-        return this._connection.get('device/basicinformation')
-    }
+  /**
+   * Get basic device information (alternative endpoint)
+   */
+  basicinformation(): Promise<DeviceBasicInfo> {
+    return this.get<DeviceBasicInfo>('device/basicinformation');
+  }
 
-    usbTetheringSwitch(): Promise<GetResponseType> {
-        return this._connection.get('device/usb-tethering-switch')
-    }
+  /**
+   * Get USB tethering switch status
+   */
+  usbTetheringSwitch(): Promise<GetResponseType> {
+    return this.get('device/usb-tethering-switch');
+  }
 
-    bootTime(): Promise<GetResponseType> {
-        return this._connection.get('device/boot_time')
-    }
+  /**
+   * Get device boot time
+   */
+  bootTime(): Promise<GetResponseType> {
+    return this.get('device/boot_time');
+  }
 
-    setControl(control: number = 4): Promise<SetResponseType> {
-        return this._connection.postSet('device/control', {
-            'Control': control
-        });
-    }
+  /**
+   * Control device (generic)
+   * @param control - Control code (1=reboot, 4=reset, etc.)
+   */
+  control(control: number): Promise<SetResponseType> {
+    return this.postSet('device/control', {
+      Control: control,
+    });
+  }
 
-    signal(): Promise<GetResponseType> {
-        return this._connection.get('device/signal')
-    }
+  /**
+   * Reboot device
+   */
+  reboot(): Promise<DeviceRebootResponse> {
+    return this.control(1);
+  }
 
-    control(control: number): Promise<SetResponseType> {
-        return this._connection.postSet('device/control', {
-            'Control': control
-        });
-    }
+  /**
+   * Reset device to factory settings
+   */
+  factoryReset(): Promise<SetResponseType> {
+    return this.control(4);
+  }
 
-    reboot(): Promise<SetResponseType> {
-        return this.control(1)
-    }
+  /**
+   * Get device signal information
+   */
+  signal(): Promise<DeviceSignal> {
+    return this.get<DeviceSignal>('device/signal');
+  }
 
-    antennaStatus(): Promise<GetResponseType> {
-        return this._connection.get('device/antenna_status')
-    }
+  /**
+   * Get antenna status
+   */
+  antennaStatus(): Promise<GetResponseType> {
+    return this.get('device/antenna_status');
+  }
 
-    getAntennaSettings(): Promise<GetResponseType> {
-        return this._connection.get('device/antenna_settings')
-    }
+  /**
+   * Get antenna settings
+   */
+  getAntennaSettings(): Promise<GetResponseType> {
+    return this.get('device/antenna_settings');
+  }
 
-    setAntennaSettings(antennaType: AntennaTypeEnum = AntennaTypeEnum.AUTO): Promise<SetResponseType> {
-        return this._connection.postSet('device/antenna_settings', {
-            'antenna_type': antennaType.toString()
-        });
-    }
+  /**
+   * Set antenna settings
+   * @param antennaType - Antenna type (AUTO, EXTERNAL, INTERNAL)
+   */
+  setAntennaSettings(
+    antennaType: AntennaTypeEnum = AntennaTypeEnum.AUTO
+  ): Promise<SetResponseType> {
+    return this.postSet('device/antenna_settings', {
+      antenna_type: antennaType.toString(),
+    });
+  }
 
-    antennaType(): Promise<GetResponseType> {
-        return this._connection.get('device/antenna_type')
-    }
+  /**
+   * Get antenna type
+   */
+  antennaType(): Promise<GetResponseType> {
+    return this.get('device/antenna_type');
+  }
 
-    antennaSetType(): Promise<GetResponseType> {
-        return this._connection.get('device/antenna_set_type')
-    }
+  /**
+   * Get antenna set type
+   */
+  antennaSetType(): Promise<GetResponseType> {
+    return this.get('device/antenna_set_type');
+  }
 
-    /**
-     * Endpoint found by reverse engineering B310s-22 firmware, unknown usage
-     */
-    logsetting(): Promise<GetResponseType> {
-        return this._connection.get('device/logsetting')
-    }
+  /**
+   * Get log settings
+   * Endpoint found by reverse engineering B310s-22 firmware
+   */
+  logsetting(): Promise<GetResponseType> {
+    return this.get('device/logsetting');
+  }
 }
 
 

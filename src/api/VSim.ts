@@ -1,10 +1,10 @@
-import { ApiGroup } from '../ApiGroup';
+import { ApiGroup } from '../base/ApiGroup';
 import { GetResponseType } from '../types';
 
 
 export class VSim extends ApiGroup {
     operateswitchVsim(): Promise<GetResponseType> {
-        return this._connection.get('vsim/operateswitch-vsim');
+        return this.get('vsim/operateswitch-vsim');
     }
 }
     
