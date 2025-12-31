@@ -10,9 +10,9 @@ import { login, logout, isLoggedIn } from './core/auth';
 import { Device } from './api/Device';
 import { Sms } from './api/Sms';
 import { Monitoring } from './api/Monitoring';
-import { DialUp } from './api/DialUpModern';
-import { User } from './api/UserModern';
-import { WLan } from './api/WLanModern';
+import { DialUp } from './api/DialUp';
+import { User } from './api/User';
+import { WLan } from './api/WLan';
 
 export interface ClientConfig {
   /**

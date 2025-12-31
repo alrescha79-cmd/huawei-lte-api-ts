@@ -260,7 +260,7 @@ Apache 2.0 - See [LICENSE](LICENSE) for details
 
 ## Credits
 
-This library is a modern TypeScript rewrite of the original [Python huawei-lte-api](https://github.com/Salamek/huawei-lte-api) by Adam Schubert.
+This library is a modern TypeScript rewrite of the original [Python huawei-lte-api](https://github.com/Salamek/huawei-lte-api).
 
 ## Contributing
 

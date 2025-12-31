@@ -1,119 +1,80 @@
+/**
+ * DialUp (Mobile Data Connection) API module
+ * Based on Python implementation: huawei_lte_api/api/DialUp.py
+ */
+
 import { ApiGroup } from '../base/ApiGroup';
-import { AuthModeEnum, IpType } from '../enums/dialup';
-import { GetResponseType, SetResponseType } from '../types';
+import {
+  DialupConnection,
+  ProfileList,
+  DialupProfile,
+  MobileDataSwitch,
+  AutoApnMatch,
+  MobileConnectionResponse,
+} from '../types/dialup';
+import { SetResponseType } from '../types/common';
 
 export class DialUp extends ApiGroup {
-    /**
-     * Get current LTE modem toggle state
-     */
-    mobileDataswitch(): Promise<GetResponseType> {
-        return this.get('dialup/mobile-dataswitch')
-    }
+  /**
+   * Get dial-up connection settings
+   */
+  dialupConnection(): Promise<DialupConnection> {
+    return this.get<DialupConnection>('dialup/connection');
+  }
 
-    connection(): Promise<GetResponseType> {
-        return this.get('dialup/connection')
-    }
+  /**
+   * Get profile list
+   */
+  profiles(): Promise<ProfileList> {
+    return this.get<ProfileList>('dialup/profiles');
+  }
 
-    dialupFeatureSwitch(): Promise<GetResponseType> {
-        return this.get('dialup/dialup-feature-switch')
-    }
+  /**
+   * Set profile
+   */
+  setProfile(profile: DialupProfile): Promise<SetResponseType> {
+    return this.postSet('dialup/profiles', profile as unknown as Record<string, unknown>);
+  }
 
-    profiles(): Promise<GetResponseType> {
-        return this.get('dialup/profiles')
-    }
+  /**
+   * Get mobile data switch status
+   */
+  mobileDataswitch(): Promise<MobileDataSwitch> {
+    return this.get<MobileDataSwitch>('dialup/mobile-dataswitch');
+  }
 
-    autoApn(): Promise<GetResponseType> {
-        return this.get('dialup/auto-apn')
-    }
+  /**
+   * Set mobile data switch
+   * @param enabled - Enable or disable mobile data
+   */
+  setMobileDataswitch(enabled: boolean): Promise<SetResponseType> {
+    return this.postSet('dialup/mobile-dataswitch', {
+      dataswitch: enabled ? 1 : 0,
+    });
+  }
 
-    dial(): Promise<SetResponseType> {
-        return this.postSet('dialup/dial', {
-            'Action': 1
-        });
-    }
+  /**
+   * Get auto APN match configuration
+   */
+  autoApn(): Promise<AutoApnMatch> {
+    return this.get<AutoApnMatch>('dialup/auto-apn');
+  }
 
-    /**
-     * Toggle LTE modem state
-     * @param dataswitch: number 0 to disable LTE modem, 1 to enable LTE modem
-     */
-    setMobileDataswitch(dataswitch: number = 0): Promise<SetResponseType> {
-        return this.postSet('dialup/mobile-dataswitch', {
-            'dataswitch': dataswitch
-        })
-    }
+  /**
+   * Connect mobile data
+   */
+  connect(): Promise<MobileConnectionResponse> {
+    return this.postSet('dialup/dial', {
+      Action: 1,
+    });
+  }
 
-    /**
-     * @TODO requires is_encrypted=True for some modems
-     * @param setDefault 
-     * @returns 
-     */
-    setDefaultProfile(setDefault: number = 0): Promise<SetResponseType> {
-        return this.postSet('dialup/profiles', {
-            'SetDefault': setDefault,
-            'Delete': 0,
-            'Modify': 0
-        })
-    }
-
-    /**
-     * @TODO requires is_encrypted=True for some modems
-     * @param index 
-     * @returns 
-     */
-    deleteProfile(index: number): Promise<SetResponseType> {
-        return this.postSet('dialup/profiles', {
-            'SetDefault': 0,
-            'Delete': index,
-            'Modify': 0
-        })
-    }
-
-    /**
-     * @TODO requires is_encrypted=True for some modems
-     * @param name 
-     * @param username 
-     * @param password 
-     * @param apn 
-     * @param dialupNumber 
-     * @param authMode 
-     * @param ipType 
-     * @param isDefault 
-     * @returns 
-     */
-    createProfile(
-        name: string, 
-        username?: string, 
-        password?: string, 
-        apn?: string, 
-        dialupNumber?: string,
-        authMode: AuthModeEnum = AuthModeEnum.AUTO,
-        ipType: IpType = IpType.IPV4_IPV6,
-        isDefault: boolean = false
-        ): Promise<SetResponseType> {
-        return this.postSet('dialup/profiles', {
-            'SetDefault': isDefault ? 1 : 0,
-            'Delete': 0,
-            'Modify': 1,
-            'Profile': {
-                'Index': '',
-                'IsValid': 1,
-                'Name': name,
-                'ApnIsStatic': apn ? 1 :0,
-                'ApnName': apn,
-                'DialupNum': dialupNumber,
-                'Username': username,
-                'Password': password,
-                'AuthMode': authMode,
-                'IpIsStatic': '',
-                'IpAddress': '',
-                'DnsIsStatic': '',
-                'PrimaryDns': '',
-                'SecondaryDns': '',
-                'ReadOnly': '0',
-                'iptype': ipType
-            }
-        })
-    }
+  /**
+   * Disconnect mobile data
+   */
+  disconnect(): Promise<MobileConnectionResponse> {
+    return this.postSet('dialup/dial', {
+      Action: 0,
+    });
+  }
 }
-
-

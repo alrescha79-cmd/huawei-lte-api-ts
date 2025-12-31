@@ -21,9 +21,9 @@ export * from './core/errors';
 export { Device } from './api/Device';
 export { Sms } from './api/Sms';
 export { Monitoring } from './api/Monitoring';
-export { DialUp } from './api/DialUpModern';
-export { User } from './api/UserModern';
-export { WLan } from './api/WLanModern';
+export { DialUp } from './api/DialUp';
+export { User } from './api/User';
+export { WLan } from './api/WLan';
 
 // Export types
 export type * from './types';

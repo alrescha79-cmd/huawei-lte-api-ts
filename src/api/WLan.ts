@@ -1,189 +1,175 @@
-import { ApiGroup } from '../base/ApiGroup';
-import { GetResponseType, SetResponseType } from '../types';
-import { AuthModeEnum, WepEncryptModeEnum, WpaEncryptModeEnum } from '../enums/wlan';
+/**
+ * WLAN (WiFi) API module
+ * Based on Python implementation: huawei_lte_api/api/WLan.py
+ */
 
+import { ApiGroup } from '../base/ApiGroup';
+import {
+  WlanBasicSettings,
+  WlanSecuritySettings,
+  StationList,
+  WifiFeatureSwitch,
+  WifiStatus,
+} from '../types/wlan';
+import { SetResponseType, GetResponseType } from '../types/common';
 
 export class WLan extends ApiGroup {
-    wifiFeatureSwitch(): Promise<GetResponseType> {
-        return this.get('wlan/wifi-feature-switch');
-    }
+  /**
+   * Get basic WLAN settings
+   */
+  basicSettings(): Promise<WlanBasicSettings> {
+    return this.get<WlanBasicSettings>('wlan/basic-settings');
+  }
 
-    stationInformation(): Promise<GetResponseType> {
-        return this.get('wlan/station-information');
-    }
+  /**
+   * Set basic WLAN settings
+   */
+  setBasicSettings(settings: Partial<WlanBasicSettings>): Promise<SetResponseType> {
+    return this.postSet('wlan/basic-settings', settings);
+  }
 
-    basicSettings(): Promise<GetResponseType> {
-        return this.get('wlan/basic-settings');
-    }
+  /**
+   * Get WLAN security settings
+   */
+  securitySettings(): Promise<WlanSecuritySettings> {
+    return this.get<WlanSecuritySettings>('wlan/security-settings');
+  }
 
-    setBasicSettings(ssid: string, hide: boolean = false, wifiRestart: boolean = false): Promise<SetResponseType> {
-        return this.postSet('wlan/basic-settings', {
-            'WifiSsid': ssid,
-            'WifiHide': hide,
-            'WifiRestart': wifiRestart ? 1 : 0
-        });
-    }
+  /**
+   * Set WLAN security settings
+   */
+  setSecuritySettings(
+    settings: Partial<WlanSecuritySettings>
+  ): Promise<SetResponseType> {
+    return this.postSet('wlan/security-settings', settings);
+  }
 
-    securitySettings(): Promise<GetResponseType> {
-        return this.get('wlan/security-settings');
-    }
+  /**
+   * Get list of connected WiFi stations (clients)
+   */
+  stationInformation(): Promise<StationList> {
+    return this.get<StationList>('wlan/host-list');
+  }
 
-    setSecuritySettings(
-        wpaPsk: string,
-        wepKey: string = '',
-        wpaEncryptionMode: WpaEncryptModeEnum = WpaEncryptModeEnum.MIX,
-        wepEncryptionMode: WepEncryptModeEnum = WepEncryptModeEnum.WEP128,
-        authMode: AuthModeEnum = AuthModeEnum.AUTO,
-        wifiRestart: boolean = true
-    ): Promise<SetResponseType> {
-        return this.postSet('wlan/security-settings', {
-            'WifiAuthmode': authMode,
-            'WifiWepKey1': wepKey,
-            'WifiWpaencryptionmodes': wpaEncryptionMode,
-            'WifiBasicencryptionmodes': wepEncryptionMode,
-            'WifiWpapsk': wpaPsk,
-            'WifiRestart': wifiRestart ? 1 : 0
-        });
-    }
+  /**
+   * Get list of connected WiFi devices (alias for stationInformation)
+   */
+  hostList(): Promise<StationList> {
+    return this.stationInformation();
+  }
 
-    multiSecuritySettings(): Promise<GetResponseType> {
-        return this.get('wlan/multi-security-settings');
-    }
+  /**
+   * Get WiFi feature switch status
+   */
+  wifiFeatureSwitch(): Promise<WifiFeatureSwitch> {
+    return this.get<WifiFeatureSwitch>('wlan/wifi-feature-switch');
+  }
 
-    multiSecuritySettingsEx(): Promise<GetResponseType> {
-        return this.get('wlan/multi-security-settings-ex');
-    }
+  /**
+   * Enable WiFi
+   */
+  enableWifi(): Promise<SetResponseType> {
+    return this.postSet('wlan/basic-settings', {
+      WifiEnable: WifiStatus.ON,
+    });
+  }
 
-    multiBasicSettings(): Promise<GetResponseType> {
-        return this.get('wlan/multi-basic-settings');
-    }
+  /**
+   * Disable WiFi
+   */
+  disableWifi(): Promise<SetResponseType> {
+    return this.postSet('wlan/basic-settings', {
+      WifiEnable: WifiStatus.OFF,
+    });
+  }
 
-    /**
-     * 
-     * @param clients list of dicts with format {'wifihostname': hostname,'WifiMacFilterMac': mac}
-     */
-    setMultiBasicSettings(clients: Array<string>): Promise<SetResponseType> {
-        return this.postSet('wlan/multi-basic-settings', {
-            'Ssids': {
-                'Ssid': clients
-            },
-            'WifiRestart': 1
-        });
-    }
+  /**
+   * Change WiFi SSID
+   */
+  changeSSID(ssid: string): Promise<SetResponseType> {
+    return this.postSet('wlan/basic-settings', {
+      WifiSsid: ssid,
+    });
+  }
 
-    hostList(): Promise<GetResponseType> {
-        // Make sure Hosts->Host is a list
-        // It may be returned as a single dict if only one is associated,
-        // as well as sometimes None.
-        return this.get('wlan/host-list')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-		.then((hosts: any) => {
-            if (!hosts['Hosts']) {
-                hosts['Hosts'] = {};
-            }
-            if (!Object.prototype.hasOwnProperty.call(hosts['Hosts'], 'Host')) {
-                hosts['Hosts']['Host'] = [];
-            }
-            const host = hosts['Hosts']['Host'];
-            if (host instanceof Array) {
-                hosts['Hosts']['Host'] = [host];
-            }
-            return host;
-		})
-    }
+  /**
+   * Change WiFi password
+   */
+  changePassword(password: string): Promise<SetResponseType> {
+    return this.postSet('wlan/security-settings', {
+      WifiWpapsk: password,
+    });
+  }
 
-    handoverSetting(): Promise<GetResponseType> {
-        return this.get('wlan/handover-setting');
-    }
+  /**
+   * Get multi-SSID settings
+   */
+  multiSsidSettings(): Promise<GetResponseType> {
+    return this.get('wlan/multi-ssid-settings');
+  }
 
-    /**
-     * 
-     * @param handover G3_PREFER = 0, WIFI_PREFER = 2
-     */
-    setHandoverSetting(handover: number): Promise<SetResponseType> {
-        return this.postSet('wlan/handover-setting', {
-            'Handover': handover
-        });
-    }
+  /**
+   * Set multi-SSID settings
+   */
+  setMultiSsidSettings(settings: Record<string, unknown>): Promise<SetResponseType> {
+    return this.postSet('wlan/multi-ssid-settings', settings);
+  }
 
-    multiSwitchSettings(): Promise<GetResponseType> {
-        return this.get('wlan/multi-switch-settings');
-    }
+  /**
+   * Get multi-switch settings
+   */
+  multiSwitch(): Promise<GetResponseType> {
+    return this.get('wlan/multi-switch-settings');
+  }
 
-    multiMacfilterSettings(): Promise<GetResponseType> {
-        return this.get('wlan/multi-macfilter-settings');
-    }
+  /**
+   * Set multi-switch settings
+   */
+  setMultiSwitch(settings: Record<string, unknown>): Promise<SetResponseType> {
+    return this.postSet('wlan/multi-switch-settings', settings);
+  }
 
-    /**
-     * 
-     * @param clients list of dicts with format {'wifihostname': hostname,'WifiMacFilterMac': mac}
-     */
-    setMultiMacfilterSettings(clients: Array<string>): Promise<SetResponseType> {
-        return this.postSet('wlan/multi-macfilter-settings', {
-            'Ssids': {
-                'Ssid': clients
-            }
-        });
-    }
+  /**
+   * Get WiFi status switch
+   */
+  statusSwitchSettings(): Promise<GetResponseType> {
+    return this.get('wlan/status-switch-settings');
+  }
 
-    multiMacfilterSettingsEx(): Promise<GetResponseType> {
-        return this.get('wlan/multi-macfilter-settings-ex');
-    }
+  /**
+   * Get handover setting
+   */
+  handover(): Promise<GetResponseType> {
+    return this.get('wlan/handover-setting');
+  }
 
-    macFilter(): Promise<GetResponseType> {
-        return this.get('wlan/mac-filter');
-    }
+  /**
+   * Get WPS settings
+   */
+  wpsSettings(): Promise<GetResponseType> {
+    return this.get('wlan/wps');
+  }
 
-    setMacFilter(hostname: string, mac: string): Promise<SetResponseType> {
-        return this.postSet('wlan/mac-filter', {
-            'wifihostname': hostname,
-            'WifiMacFilterMac': mac
-        });
-    }
+  /**
+   * Set WPS settings
+   */
+  setWpsSettings(settings: Record<string, unknown>): Promise<SetResponseType> {
+    return this.postSet('wlan/wps', settings);
+  }
 
-    oledShowpassword(): Promise<GetResponseType> {
-        return this.get('wlan/oled-showpassword');
-    }
+  /**
+   * Get WiFi country code
+   */
+  countryCode(): Promise<GetResponseType> {
+    return this.get('wlan/country-code');
+  }
 
-    wps(): Promise<GetResponseType> {
-        return this.get('wlan/wps');
-    }
-
-    wpsAppin(): Promise<GetResponseType> {
-        return this.get('wlan/wps-appin');
-    }
-
-    wpsPbc(): Promise<GetResponseType> {
-        return this.get('wlan/wps-pbc');
-    }
-
-    wpsSwitch(): Promise<GetResponseType> {
-        return this.get('wlan/wps-switch');
-    }
-
-    statusSwitchSettings(): Promise<GetResponseType> {
-        return this.get('wlan/status-switch-settings');
-    }
-
-    /**
-     * Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
-     */
-    wifiprofile(): Promise<GetResponseType> {
-        return this.get('wlan/wifiprofile');
-    }
-
-    /**
-     * Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
-     */
-    wififrequence(): Promise<GetResponseType> {
-        return this.get('wlan/wififrequence');
-    }
-
-    /**
-     * Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
-     */
-    wifiscanresult(): Promise<GetResponseType> {
-        return this.get('wlan/wifiscanresult');
-    }
+  /**
+   * Set WiFi country code
+   */
+  setCountryCode(countryCode: string): Promise<SetResponseType> {
+    return this.postSet('wlan/country-code', {
+      WifiCountry: countryCode,
+    });
+  }
 }
-
