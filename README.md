@@ -18,7 +18,7 @@ Modern TypeScript library for Huawei LTE modems. Control your modem, send SMS, g
 ## Installation
 
 ```bash
-npm install @alrescha79/huawei-lte-api
+npm install git+https://github.com/alrescha79-cmd/huawei-lte-api-ts.git#feat/modernize-to-v2.0.0
 ```
 
 ## Quick Start
@@ -244,6 +244,10 @@ See the [examples](./examples) directory for complete working examples:
 - `wifi-control.js` - WiFi status and basic controls
 - `mobile-data-control.js` - Mobile data connection control
 - `sms-operations.js` - SMS operations (list, send, delete)
+
+### React Native / Expo Examples
+- `react-native-expo-auth.tsx` - Complete authentication with secure storage
+- See [REACT-NATIVE-EXPO.md](./examples/REACT-NATIVE-EXPO.md) for full documentation
 
 ## TypeScript Support
 
