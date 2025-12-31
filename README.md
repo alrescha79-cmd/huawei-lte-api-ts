@@ -1,8 +1,8 @@
-# huawei-lte-api-ts
+# @alrescha79/huawei-lte-api
 
 Modern TypeScript library for Huawei LTE modems. Control your modem, send SMS, get network info, manage WiFi, and more.
 
-[![npm version](https://badge.fury.io/js/huawei-lte-api.svg)](https://www.npmjs.com/package/huawei-lte-api)
+[![npm version](https://badge.fury.io/js/%40alrescha79%2Fhuawei-lte-api.svg)](https://www.npmjs.com/package/@alrescha79/huawei-lte-api)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
 
@@ -18,13 +18,13 @@ Modern TypeScript library for Huawei LTE modems. Control your modem, send SMS, g
 ## Installation
 
 ```bash
-npm install git+https://github.com/alrescha79-cmd/huawei-lte-api-ts.git#feat/modernize-to-v2.0.0
+npm install @alrescha79/huawei-lte-api
 ```
 
 ## Quick Start
 
 ```typescript
-import { createClient } from 'huawei-lte-api';
+import { createClient } from '@alrescha79/huawei-lte-api';
 
 // Create client (automatically handles login)
 const client = await createClient({
@@ -51,7 +51,7 @@ await client.logout();
 ### Without Auto-Login
 
 ```typescript
-import { HuaweiLTEClient } from 'huawei-lte-api';
+import { HuaweiLTEClient } from '@alrescha79/huawei-lte-api';
 
 const client = new HuaweiLTEClient({
   url: 'http://192.168.8.1',
@@ -88,7 +88,7 @@ const signal = await client.device.signal();
 > **Note:** SMS functionality is only available on mobile hotspot models (e.g., E5577, E5186, B528). Router models (e.g., B310, B315, B525) typically do not support SMS.
 
 ```typescript
-import { BoxType, ResponseErrorNotSupportedException } from 'huawei-lte-api';
+import { BoxType, ResponseErrorNotSupportedException } from '@alrescha79/huawei-lte-api';
 
 try {
   // Get SMS count
@@ -149,7 +149,7 @@ const status = await client.dialup.mobileDataswitch();
 ### WiFi Management
 
 ```typescript
-import { AuthMode, WpaEncryptMode } from 'huawei-lte-api';
+import { AuthMode, WpaEncryptMode } from '@alrescha79/huawei-lte-api';
 
 // Get WiFi settings
 const settings = await client.wlan.basicSettings();
@@ -210,7 +210,7 @@ Authentication is handled automatically based on the modem's requirements.
 import { 
   ResponseErrorLoginRequiredException,
   ResponseErrorSystemBusyException 
-} from 'huawei-lte-api';
+} from '@alrescha79/huawei-lte-api';
 
 try {
   const data = await client.device.information();
@@ -255,7 +255,7 @@ import type {
   MonitoringStatus,
   SmsMessage,
   ClientConfig 
-} from 'huawei-lte-api';
+} from '@alrescha79/huawei-lte-api';
 ```
 
 ## Building from Source
