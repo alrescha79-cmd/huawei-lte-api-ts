@@ -16,6 +16,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "prepare": "npm run build",
     "build": "npm run build:cjs && npm run build:esm && npm run build:types",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
     "build:esm": "tsc --module esnext --outDir dist/esm && node scripts/fix-esm-imports.js && echo '{\"type\":\"module\"}' > dist/esm/package.json",
