@@ -79,15 +79,13 @@
     "vitest": "^1.0.0"
   },
   "dependencies": {
+    "@noble/hashes": "^2.0.1",
     "xml2js": "^0.6.2"
   },
   "peerDependencies": {
-    "react-native-quick-crypto": ">=0.7.0"
+    "fast-xml-parser": ">=4.0.0"
   },
   "peerDependenciesMeta": {
-    "react-native-quick-crypto": {
-      "optional": true
-    },
     "fast-xml-parser": {
       "optional": true
     }

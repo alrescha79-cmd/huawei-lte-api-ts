@@ -1,9 +1,28 @@
 /**
  * Cryptographic utilities for Huawei LTE API
  * Based on Python implementation: huawei_lte_api/Tools.py
+ * Auto-detects React Native and uses appropriate crypto library
  */
 
-import * as crypto from 'crypto';
+// Check if running in React Native environment
+const isReactNative = typeof navigator !== 'undefined' && navigator.product === 'ReactNative';
+
+// Dynamic imports based on environment
+let crypto: any;
+let sha256Impl: any;
+
+if (isReactNative) {
+  // React Native: use @noble/hashes
+  try {
+    const noble = require('@noble/hashes/sha256');
+    sha256Impl = noble.sha256;
+  } catch (e) {
+    throw new Error('React Native requires @noble/hashes. Install: npm install @noble/hashes');
+  }
+} else {
+  // Node.js: use native crypto
+  crypto = require('crypto');
+}
 
 export enum RsaPaddingType {
   PKCS1_v1_5 = 0,
@@ -23,6 +42,14 @@ export function rsaEncrypt(
   data: Buffer,
   padding: RsaPaddingType = RsaPaddingType.PKCS1_v1_5
 ): Buffer {
+  if (isReactNative) {
+    // RSA not supported in React Native (most modems use SHA256 auth anyway)
+    throw new Error(
+      'RSA encryption not supported in React Native. ' +
+      'Most Huawei modems use SHA256 authentication (password_type=4) which is supported.'
+    );
+  }
+
   // Base64 encode the data first
   const b64data = data.toString('base64');
   const dataBuffer = Buffer.from(b64data, 'utf-8');
@@ -153,7 +180,15 @@ function encodeLength(length: number): Buffer {
  * SHA256 hash
  */
 export function sha256(data: string | Buffer): Buffer {
-  return crypto.createHash('sha256').update(data as crypto.BinaryLike).digest();
+  if (isReactNative) {
+    // Use @noble/hashes for React Native
+    const input = typeof data === 'string' ? Buffer.from(data, 'utf-8') : data;
+    const hash = sha256Impl(input);
+    return Buffer.from(hash);
+  } else {
+    // Use Node.js crypto
+    return crypto.createHash('sha256').update(data as any).digest();
+  }
 }
 
 /**

@@ -1,6 +1,6 @@
 # React Native / Expo Support
 
-This library supports React Native and Expo with crypto polyfills.
+This library fully supports React Native and Expo with automatic environment detection.
 
 ## Quick Start
 
@@ -10,44 +10,36 @@ This library supports React Native and Expo with crypto polyfills.
 npm install @alrescha79/huawei-lte-api
 ```
 
-### 2. Install Crypto Polyfill
+### 2. Install Required Dependencies
 
 ```bash
-npm install react-native-quick-crypto
-npx expo install react-native-quick-crypto
+# XML parser for React Native
+npm install fast-xml-parser
+
+# Crypto library (already included in @alrescha79/huawei-lte-api)
+# @noble/hashes is automatically used in React Native
 ```
 
-### 3. Setup (Expo)
+### 3. That's it!
 
-Add to your `app.json`:
+No additional setup needed. The library automatically detects React Native environment and uses:
+- **@noble/hashes** for SHA256 (pure JavaScript, works everywhere)
+- **fast-xml-parser** for XML parsing (no Node.js dependencies)
 
-```json
-{
-  "expo": {
-    "plugins": [
-      "react-native-quick-crypto"
-    ]
-  }
-}
-```
-
-### 4. Import Polyfill (Required!)
-
-At the **very top** of your entry file (`index.js` or `App.tsx`):
+### 4. Start Developing
 
 ```typescript
-// MUST be first import!
-import 'react-native-quick-crypto';
+import { createClient } from '@alrescha79/huawei-lte-api';
 
-// Your other imports
-import { HuaweiAuthProvider } from './contexts/HuaweiAuthProvider';
+const client = await createClient({
+  url: 'http://192.168.8.1',
+  username: 'admin',
+  password: 'yourpassword',
+});
+
+const device = await client.device.information();
+console.log('Device:', device.DeviceName);
 ```
-
-### 5. Rebuild Your App
-
-```bash
-# For Expo
-npx expo prebuild --clean
 npx expo run:android
 # or
 npx expo run:ios
@@ -59,53 +51,71 @@ cd .. && npx react-native run-android
 
 ## How It Works
 
-The library automatically uses React Native-compatible crypto when running in React Native:
+The library automatically detects the runtime environment and uses appropriate implementations:
 
-- **Node.js**: Uses native `crypto` module
-- **React Native**: Uses `react-native-quick-crypto` via `crypto.native.js`
-- **Automatic**: The correct version is selected by React Native's resolver
+**Node.js Environment:**
+- `crypto` module for SHA256 hashing
+- `xml2js` for XML parsing
+- Full RSA encryption support
+
+**React Native Environment:**
+- `@noble/hashes` for SHA256 hashing (pure JavaScript)
+- `fast-xml-parser` for XML parsing (no Node.js deps)
+- RSA encryption disabled (most modems use SHA256 auth anyway)
+
+Detection is automatic - no configuration needed!
 
 ## Complete Example
 
-See [react-native-expo-auth.tsx](./react-native-expo-auth.tsx) for a full working example.
+See [react-native-expo-auth.tsx](./examples/react-native-expo-auth.tsx) for a full working example with authentication, storage, and UI.
+
+## Important Notes
+
+### SHA256 Authentication (Recommended)
+
+Most modern Huawei modems use SHA256 authentication (password_type=4), which is **fully supported** in React Native:
+
+```typescript
+const client = await createClient({
+  url: 'http://192.168.8.1',
+  username: 'admin',
+  password: 'yourpassword', // Will use SHA256 automatically
+});
+```
+
+### RSA Authentication (Not Supported in React Native)
+
+RSA authentication is rarely used and requires Node.js crypto module. If your modem requires RSA auth, you'll get a clear error message. Solution: Use SHA256 auth instead (password_type=4).
 
 ## Troubleshooting
 
-### Error: Cannot find module 'crypto'
+### Error: Cannot find module 'fast-xml-parser'
 
-You forgot to install `react-native-quick-crypto`:
+Install the XML parser:
 
 ```bash
-npm install react-native-quick-crypto
-npx expo install react-native-quick-crypto
+npm install fast-xml-parser
 ```
 
-### Error: Invalid hook call
+### Error: Cannot find module '@noble/hashes'
 
-Make sure you're importing the polyfill at the **very top** of your entry file:
+This should be auto-installed with the library. If not:
 
-```typescript
-// index.js - FIRST LINE
-import 'react-native-quick-crypto';
+```bash
+npm install @noble/hashes
 ```
 
 ### Metro bundler issues
 
-Clear cache and rebuild:
+Clear cache and restart:
 
 ```bash
 npx expo start --clear
 ```
 
-### Android build fails
+### Still getting Node.js module errors?
 
-Make sure you ran `npx expo prebuild --clean` after installing the crypto polyfill.
-
-## Alternative: Bare React Native
-
-For bare React Native (no Expo):
-
-1. Install dependencies:
+Make sure you have the latest version of the library and all dependencies are installed.
 ```bash
 npm install react-native-quick-crypto
 cd ios && pod install
