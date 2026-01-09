@@ -7,7 +7,7 @@ This library fully supports React Native and Expo with automatic environment det
 ### 1. Install the Library
 
 ```bash
-npm install @alrescha79/huawei-lte-api
+npm install github:alrescha79-cmd/huawei-lte-api-ts#feat/modernize-to-v2.0.0
 ```
 
 ### 2. Install Required Dependencies
@@ -15,15 +15,12 @@ npm install @alrescha79/huawei-lte-api
 ```bash
 # XML parser for React Native
 npm install fast-xml-parser
-
-# Crypto library (already included in @alrescha79/huawei-lte-api)
-# @noble/hashes is automatically used in React Native
 ```
 
 ### 3. That's it!
 
 No additional setup needed. The library automatically detects React Native environment and uses:
-- **@noble/hashes** for SHA256 (pure JavaScript, works everywhere)
+- **@noble/hashes** for SHA256, HMAC, PBKDF2 (pure JavaScript, works everywhere including Expo Go)
 - **fast-xml-parser** for XML parsing (no Node.js dependencies)
 
 ### 4. Start Developing
@@ -40,6 +37,14 @@ const client = await createClient({
 const device = await client.device.information();
 console.log('Device:', device.DeviceName);
 ```
+
+### 5. Run Your App
+
+```bash
+# For Expo
+npx expo start
+
+# For Expo development build
 npx expo run:android
 # or
 npx expo run:ios
@@ -59,11 +64,12 @@ The library automatically detects the runtime environment and uses appropriate i
 - Full RSA encryption support
 
 **React Native Environment:**
-- `@noble/hashes` for SHA256 hashing (pure JavaScript)
+- `@noble/hashes` for all crypto operations (pure JavaScript)
 - `fast-xml-parser` for XML parsing (no Node.js deps)
 - RSA encryption disabled (most modems use SHA256 auth anyway)
 
 Detection is automatic - no configuration needed!
+
 
 ## Complete Example
 

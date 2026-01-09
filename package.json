@@ -9,7 +9,9 @@
     "./dist/esm/core/crypto.js": "./dist/esm/core/crypto.native.js",
     "./dist/cjs/core/crypto.js": "./dist/cjs/core/crypto.native.js",
     "./dist/esm/core/xml-parser.js": "./dist/esm/core/xml-parser.native.js",
-    "./dist/cjs/core/xml-parser.js": "./dist/cjs/core/xml-parser.native.js"
+    "./dist/cjs/core/xml-parser.js": "./dist/cjs/core/xml-parser.native.js",
+    "./dist/esm/core/scram.js": "./dist/esm/core/scram.native.js",
+    "./dist/cjs/core/scram.js": "./dist/cjs/core/scram.native.js"
   },
   "exports": {
     ".": {

@@ -21,13 +21,15 @@ Modern TypeScript library for Huawei LTE modems. Control your modem, send SMS, g
 ### Node.js / Web
 
 ```bash
-npm install @alrescha79/huawei-lte-api
+npm install github:alrescha79-cmd/huawei-lte-api-ts#feat/modernize-to-v2.0.0
 ```
 
 ### React Native / Expo
 
 ```bash
-npm install @alrescha79/huawei-lte-api
+npm install github:alrescha79-cmd/huawei-lte-api-ts#feat/modernize-to-v2.0.0
+npm install fast-xml-parser
+```
 npm install react-native-quick-crypto
 npx expo install react-native-quick-crypto
 ```
